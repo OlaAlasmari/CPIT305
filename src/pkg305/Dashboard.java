@@ -1,4 +1,5 @@
 package pkg305;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.application.Platform;
@@ -12,12 +13,17 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Button;
 import javafx.event.EventHandler;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class Dashboard {
+
     private JPanel mainPanel;
     private CardLayout cardLayout;
     private JPanel dashboardPanel;
@@ -146,82 +152,81 @@ public class Dashboard {
     }
 
     // Show home screen
-private void showHome() {
-    Platform.runLater(() -> {
-        VBox homeLayout = new VBox(20);
-        homeLayout.setPadding(new Insets(20));
-        homeLayout.setAlignment(Pos.TOP_CENTER);
+    private void showHome() {
+        Platform.runLater(() -> {
+            VBox homeLayout = new VBox(20);
+            homeLayout.setPadding(new Insets(20));
+            homeLayout.setAlignment(Pos.TOP_CENTER);
 
-        // Title label
-        Label titleLabel = new Label("WELCOME TO SPORT TOURNAMENT APPLICATION !!");
-        titleLabel.setStyle("-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #a3c1a4;");
-        homeLayout.getChildren().add(titleLabel);
+            // Title label
+            Label titleLabel = new Label("WELCOME TO SPORT TOURNAMENT APPLICATION !!");
+            titleLabel.setStyle("-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #a3c1a4;");
+            homeLayout.getChildren().add(titleLabel);
 
-        // Recent Match Box
-        VBox matchBox = new VBox(10);
-        matchBox.setAlignment(Pos.CENTER);
-        matchBox.setPadding(new Insets(20));
-        matchBox.setStyle("-fx-background-color: rgba(240, 240, 240, 0.7); -fx-border-color: #BDC3C7; -fx-border-radius: 5px;");
+            // Recent Match Box
+            VBox matchBox = new VBox(10);
+            matchBox.setAlignment(Pos.CENTER);
+            matchBox.setPadding(new Insets(20));
+            matchBox.setStyle("-fx-background-color: rgba(240, 240, 240, 0.7); -fx-border-color: #BDC3C7; -fx-border-radius: 5px;");
 
-        Label recentMatchLabel = new Label("RECENT MATCH");
-        recentMatchLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+            Label recentMatchLabel = new Label("RECENT MATCH");
+            recentMatchLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
-        HBox matchContent = new HBox(20);
-        matchContent.setAlignment(Pos.CENTER);
+            HBox matchContent = new HBox(20);
+            matchContent.setAlignment(Pos.CENTER);
 
-        Image team1Logo = new Image(getClass().getResource("/image/Team1.png").toString());
-        Image team2Logo = new Image(getClass().getResource("/image/Team2.png").toString());
+            Image team1Logo = new Image(getClass().getResource("/image/Team1.png").toString());
+            Image team2Logo = new Image(getClass().getResource("/image/Team2.png").toString());
 
-        ImageView team1ImageView = new ImageView(team1Logo);
-        team1ImageView.setFitHeight(90);
-        team1ImageView.setFitWidth(70);
+            ImageView team1ImageView = new ImageView(team1Logo);
+            team1ImageView.setFitHeight(90);
+            team1ImageView.setFitWidth(70);
 
-        ImageView team2ImageView = new ImageView(team2Logo);
-        team2ImageView.setFitHeight(90);
-        team2ImageView.setFitWidth(95);
+            ImageView team2ImageView = new ImageView(team2Logo);
+            team2ImageView.setFitHeight(90);
+            team2ImageView.setFitWidth(95);
 
-        Label matchResult = new Label("  2 - 1");
-        matchResult.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+            Label matchResult = new Label("  2 - 1");
+            matchResult.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
-        matchContent.getChildren().addAll(team1ImageView, matchResult, team2ImageView);
-        matchBox.getChildren().addAll(recentMatchLabel, matchContent);
-        homeLayout.getChildren().add(matchBox);
+            matchContent.getChildren().addAll(team1ImageView, matchResult, team2ImageView);
+            matchBox.getChildren().addAll(recentMatchLabel, matchContent);
+            homeLayout.getChildren().add(matchBox);
 
-        // Best Coach Section
-        VBox coachBox = new VBox(10);
-        coachBox.setAlignment(Pos.CENTER);
-        coachBox.setPadding(new Insets(20));
-        coachBox.setStyle("-fx-background-color: rgba(240, 240, 240, 0.7); -fx-border-color: #BDC3C7; -fx-border-radius: 5px;");
+            // Best Coach Section
+            VBox coachBox = new VBox(10);
+            coachBox.setAlignment(Pos.CENTER);
+            coachBox.setPadding(new Insets(20));
+            coachBox.setStyle("-fx-background-color: rgba(240, 240, 240, 0.7); -fx-border-color: #BDC3C7; -fx-border-radius: 5px;");
 
-        Label bestCoachLabel = new Label("BEST COACH");
-        bestCoachLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+            Label bestCoachLabel = new Label("BEST COACH");
+            bestCoachLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
-        HBox coachDetails = new HBox(20);
-        coachDetails.setAlignment(Pos.CENTER);
+            HBox coachDetails = new HBox(20);
+            coachDetails.setAlignment(Pos.CENTER);
 
-        // Coach Name and Team Name
-        TextField coachName = new TextField("Coach Name");
-        coachName.setPrefWidth(200);
-        coachName.setStyle("-fx-background-color: rgba(200, 200, 200, 0.5); -fx-font-size: 18px; -fx-font-weight: bold;");
-        coachName.setEditable(false); // Non-editable field
+            // Coach Name and Team Name
+            TextField coachName = new TextField("Coach Name");
+            coachName.setPrefWidth(200);
+            coachName.setStyle("-fx-background-color: rgba(200, 200, 200, 0.5); -fx-font-size: 18px; -fx-font-weight: bold;");
+            coachName.setEditable(false); // Non-editable field
 
-        TextField teamName = new TextField("Team");
-        teamName.setPrefWidth(200);
-        teamName.setStyle("-fx-background-color: rgba(200, 200, 200, 0.5); -fx-font-size: 18px; -fx-font-weight: bold;");
-        teamName.setEditable(false); // Non-editable field
+            TextField teamName = new TextField("Team");
+            teamName.setPrefWidth(200);
+            teamName.setStyle("-fx-background-color: rgba(200, 200, 200, 0.5); -fx-font-size: 18px; -fx-font-weight: bold;");
+            teamName.setEditable(false); // Non-editable field
 
-        coachDetails.getChildren().addAll(coachName, teamName);
+            coachDetails.getChildren().addAll(coachName, teamName);
 
-        // Add Best Coach details to the layout
-        coachBox.getChildren().addAll(bestCoachLabel, coachDetails);
-        homeLayout.getChildren().add(coachBox);
+            // Add Best Coach details to the layout
+            coachBox.getChildren().addAll(bestCoachLabel, coachDetails);
+            homeLayout.getChildren().add(coachBox);
 
-        // Add the home layout to the result area
-        resultArea.getChildren().clear();
-        resultArea.getChildren().add(homeLayout);
-    });
-}
-
+            // Add the home layout to the result area
+            resultArea.getChildren().clear();
+            resultArea.getChildren().add(homeLayout);
+        });
+    }
 
     // Add Team Form
     private VBox createAddTeamForm() {
@@ -254,6 +259,32 @@ private void showHome() {
         addButton.setStyle("-fx-background-color: #e9f5e9; -fx-text-fill: #4a4a4a; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10px; -fx-background-radius: 5px;");
         addButton.setMaxWidth(150);
         addButton.setAlignment(Pos.CENTER);
+
+        // Action to add team to the database
+        addButton.setOnAction(e -> {
+            String teamName = nameField.getText();
+            String coachName = coachField.getText();
+            int numberOfPlayers = Integer.parseInt(playersField.getText());
+            String matchType = matchTypeField.getText();
+
+            // Add the team to the database
+            try (Connection connection = DatabaseConnection.getConnection();
+                    PreparedStatement statement = connection.prepareStatement("INSERT INTO Teams (team_name, coach_name, number_of_players, sport_type) VALUES (?, ?, ?, ?)")) {
+
+                statement.setString(1, teamName);
+                statement.setString(2, coachName);
+                statement.setInt(3, numberOfPlayers);
+                statement.setString(4, matchType);
+
+                int rowsInserted = statement.executeUpdate();
+                if (rowsInserted > 0) {
+                    JOptionPane.showMessageDialog(null, "Team added successfully!!");
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Failed to add team to the database.");
+            }
+        });
 
         form.getChildren().addAll(nameField, coachField, playersField, matchTypeField, addButton);
         return form;
@@ -386,8 +417,12 @@ private void showHome() {
 
             ComboBox<Integer> hourComboBox = new ComboBox<>();
             ComboBox<Integer> minuteComboBox = new ComboBox<>();
-            for (int i = 0; i < 24; i++) hourComboBox.getItems().add(i);
-            for (int i = 0; i < 60; i += 5) minuteComboBox.getItems().add(i);
+            for (int i = 0; i < 24; i++) {
+                hourComboBox.getItems().add(i);
+            }
+            for (int i = 0; i < 60; i += 5) {
+                minuteComboBox.getItems().add(i);
+            }
 
             hourComboBox.setPromptText("Hour");
             minuteComboBox.setPromptText("Minute");

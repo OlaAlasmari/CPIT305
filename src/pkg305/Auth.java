@@ -2,8 +2,14 @@ package pkg305;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 public class Auth {
+
     private JPanel mainPanel;
     private CardLayout cardLayout;
     private Dashboard dashboard; // Pass the existing dashboard object
@@ -51,7 +57,7 @@ public class Auth {
 
         loginBtn.addActionListener(e -> {
             // Show the existing dashboard
-            dashboard.showDashboard(); 
+            dashboard.showDashboard();
             cardLayout.show(mainPanel, "dashboardScreen");
         });
 
@@ -127,4 +133,6 @@ public class Auth {
 
         return signupPanel;
     }
+
+   
 }
